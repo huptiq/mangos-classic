@@ -489,6 +489,9 @@ enum PlayerExtraFlags
     // other states
     PLAYER_EXTRA_PVP_DEATH          = 0x0100,                // store PvP death status until corpse creating.
     PLAYER_EXTRA_WHISP_RESTRICTION  = 0x0200,
+
+    // death prevention
+    PLAYER_EXTRA_GM_UNKILLABLE         = 0x0400,
 };
 
 // 2^n values
@@ -1335,7 +1338,6 @@ class Player : public Unit
         void SendPushToPartyResponse(Player* pPlayer, uint32 msg) const;
         void SendQuestUpdateAddItem(Quest const* pQuest, uint32 item_idx, uint32 current, uint32 count);
         void SendQuestUpdateAddCreatureOrGo(Quest const* pQuest, ObjectGuid guid, uint32 creatureOrGO_idx, uint32 count);
-        void SendQuestGiverStatusMultiple() const;
 
         ObjectGuid GetDividerGuid() const { return m_dividerGuid; }
         void SetDividerGuid(ObjectGuid guid) { m_dividerGuid = guid; }
@@ -1473,7 +1475,6 @@ class Player : public Unit
 
         void SendProficiency(ItemClass itemClass, uint32 itemSubclassMask) const;
         void SendInitialSpells() const;
-        void SendUnlearnSpells() const;
         void SendSupercededSpell(uint32 oldSpell, uint32 newSpell) const;
         void SendRemovedSpell(uint32 spellId) const;
         bool addSpell(uint32 spell_id, bool active, bool learning, bool dependent, bool disabled);
@@ -1656,7 +1657,6 @@ class Player : public Unit
         void ResetInstances(InstanceResetMethod method);
         void SendResetInstanceSuccess(uint32 MapId) const;
         void SendResetInstanceFailed(uint32 reason, uint32 MapId) const;
-        void SendResetFailedNotify(uint32 mapid) const;
 
         bool SetPosition(float x, float y, float z, float orientation, bool teleport = false);
         void UpdateTerainEnvironmentFlags(Map* m, float x, float y, float z);
@@ -2208,6 +2208,9 @@ class Player : public Unit
 #endif
 
         void SendLootError(ObjectGuid guid, LootError error) const;
+
+        void SetDeathPrevention(bool enable);
+        bool IsPreventingDeath() const override;
 
         // cooldown system
         virtual void AddGCD(SpellEntry const& spellEntry, uint32 forcedDuration = 0, bool updateClient = false) override;

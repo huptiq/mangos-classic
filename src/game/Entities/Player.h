@@ -2325,6 +2325,7 @@ class Player : public Unit
         void _SaveSpells();
         void _SaveBGData();
         void _SaveStats();
+    float xp_modifier;
 
         /*********************************************************/
         /***              ENVIRONMENTAL SYSTEM                 ***/

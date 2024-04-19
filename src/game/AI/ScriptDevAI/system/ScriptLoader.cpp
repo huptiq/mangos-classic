@@ -11,6 +11,7 @@ extern void AddSC_casino_roll();
 extern void AddSC_teleporter();
 extern void AddSC_slots();
 extern void AddSC_elevator_operator();
+extern void AddSC_custom_xp();
 
 // examples
 extern void AddSC_example_creature();
@@ -221,6 +222,7 @@ void AddScripts()
     AddSC_teleporter();
     AddSC_slots();
     AddSC_elevator_operator();
+    AddSC_custom_xp();
 
     // examples
     AddSC_example_creature();

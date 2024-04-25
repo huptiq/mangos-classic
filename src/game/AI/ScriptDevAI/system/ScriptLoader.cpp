@@ -8,6 +8,12 @@
 extern void AddSC_battleground();
 
 // custom
+extern void AddSC_npc_enchanter();
+extern void AddSC_casino_roll();
+extern void AddSC_teleporter();
+extern void AddSC_slots();
+extern void AddSC_elevator_operator();
+extern void AddSC_custom_xp();
 
 // examples
 extern void AddSC_example_creature();
@@ -213,6 +219,12 @@ void AddScripts()
     AddSC_battleground();
 
     // custom
+    AddSC_npc_enchanter();
+    AddSC_casino_roll();
+    AddSC_teleporter();
+    AddSC_slots();
+    AddSC_elevator_operator();
+    AddSC_custom_xp();
 
     // examples
     AddSC_example_creature();

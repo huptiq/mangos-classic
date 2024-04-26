@@ -24,6 +24,41 @@ std::vector<std::string> slot_options = {
     "classicon_hunter",
     "classicon_paladin"};
 
+void UpdateCasinoStats(int update)
+{
+    char query[256];
+    sprintf(query, "SELECT jackpot FROM casino_stats LIMIT 1");
+
+    std::unique_ptr<QueryResult> result(WorldDatabase.Query(query));
+    if (result && result->GetRowCount() > 0)
+    {
+        int current_jackpot = result->Fetch()[0].GetInt32();
+        int new_jackpot;
+        if (update >= 0)
+        {
+            new_jackpot = current_jackpot + update;
+        }
+        else
+        {
+            new_jackpot = current_jackpot - (-update); // Taking the absolute value of negative update
+        }
+        sprintf(query, "UPDATE casino_stats SET jackpot = %d LIMIT 1", new_jackpot);
+        WorldDatabase.DirectExecute(query);
+    }
+    else
+    {
+        if (update >= 0)
+        {
+            sprintf(query, "INSERT INTO casino_stats (jackpot) VALUES (%d)", update);
+        }
+        else
+        {
+            sprintf(query, "INSERT INTO casino_stats (jackpot) VALUES (%d)", -update); // Inserting positive value for negative update
+        }
+        WorldDatabase.DirectExecute(query);
+    }
+}
+
 bool GossipHello_slots(Player *player, Creature *creature)
 {
     player->ADD_GOSSIP_ITEM(6, " Slot-Machine Payouts", GOSSIP_SENDER_MAIN, 21);
@@ -80,6 +115,7 @@ bool GossipSelect_slots(Player *player, Creature *creature, uint32 sender, uint3
     if (action < 4)
     {
         player->ModifyMoney(-bet_amount_slots);
+        UpdateCasinoStats(bet_amount_slots);
         // Randomly select slot options
         uint32 payout_win;
         std::random_device rd;
@@ -121,6 +157,7 @@ bool GossipSelect_slots(Player *player, Creature *creature, uint32 sender, uint3
                 payout = bet_amount_slots * 10; // Shaman, Warrior, Warlock, Priest icons
             }
             player->ModifyMoney(payout);
+            UpdateCasinoStats(-payout);
             if (payout >= 10000)
             {
                 payout_win = payout / 10000;
@@ -140,6 +177,7 @@ bool GossipSelect_slots(Player *player, Creature *creature, uint32 sender, uint3
             // One slot is Druid
             uint32 payout = bet_amount_slots * 1.5;
             player->ModifyMoney(payout);
+            UpdateCasinoStats(-payout);
             if (payout >= 10000)
             {
                 payout_win = payout / 10000;
@@ -158,6 +196,7 @@ bool GossipSelect_slots(Player *player, Creature *creature, uint32 sender, uint3
             // Two slots match
             uint32 payout = bet_amount_slots * 1;
             player->ModifyMoney(payout);
+            UpdateCasinoStats(-payout);
             if (payout >= 10000)
             {
                 payout_win = payout / 10000;

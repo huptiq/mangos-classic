@@ -2,6 +2,7 @@
 #include "../../include/sc_gossip.h"
 #include "../../../../World/World.h"
 #include "../../../../Entities/Bag.h"
+#include "./casino_slots.cpp"
 #include <string>
 #include <thread>
 #include <iostream>
@@ -36,6 +37,7 @@ bool GossipSelect_CasinoRoll(Player *player, Creature *creature, uint32 sender, 
             {
                 bet_amount_roll = 5000;
                 player->ModifyMoney(-bet_amount_roll);
+                UpdateCasinoStats(bet_amount_roll);
                 player->ADD_GOSSIP_ITEM(5, " Heads", GOSSIP_SENDER_MAIN, 20);
                 player->ADD_GOSSIP_ITEM(5, " Tails", GOSSIP_SENDER_MAIN, 21);
             }
@@ -50,6 +52,7 @@ bool GossipSelect_CasinoRoll(Player *player, Creature *creature, uint32 sender, 
             {
                 bet_amount_roll = 10000;
                 player->ModifyMoney(-bet_amount_roll);
+                UpdateCasinoStats(bet_amount_roll);
                 player->ADD_GOSSIP_ITEM(5, " Heads", GOSSIP_SENDER_MAIN, 20);
                 player->ADD_GOSSIP_ITEM(5, " Tails", GOSSIP_SENDER_MAIN, 21);
             }
@@ -64,6 +67,7 @@ bool GossipSelect_CasinoRoll(Player *player, Creature *creature, uint32 sender, 
             {
                 bet_amount_roll = 100000;
                 player->ModifyMoney(-bet_amount_roll);
+                UpdateCasinoStats(bet_amount_roll);
                 player->ADD_GOSSIP_ITEM(5, " Heads", GOSSIP_SENDER_MAIN, 20);
                 player->ADD_GOSSIP_ITEM(5, " Tails", GOSSIP_SENDER_MAIN, 21);
             }
@@ -119,6 +123,7 @@ bool GossipSelect_CasinoRoll(Player *player, Creature *creature, uint32 sender, 
                     player->ADD_GOSSIP_ITEM(5, " Repeat the bet", GOSSIP_SENDER_MAIN, 1);
                 }
                 player->ModifyMoney(2 * bet_amount_roll);
+                UpdateCasinoStats(-(2 * bet_amount_roll));
                 creature->HandleEmote(18);
                 player->HandleEmote(4);
                 player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetObjectGuid());
@@ -170,6 +175,7 @@ bool GossipSelect_CasinoRoll(Player *player, Creature *creature, uint32 sender, 
                     player->ADD_GOSSIP_ITEM(5, " Repeat the bet", GOSSIP_SENDER_MAIN, 1);
                 }
                 player->ModifyMoney(2 * bet_amount_roll);
+                UpdateCasinoStats(-(2 * bet_amount_roll));
                 creature->HandleEmote(18);
                 player->HandleEmote(4);
                 player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetObjectGuid());
